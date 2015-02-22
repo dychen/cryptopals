@@ -32,11 +32,11 @@ def score(s):
         positive_set = set(range(ord('a'), ord('a')+26) + [ord(' ')])
         # -1 if the string is in the set of rarely used characters:
         #   128, 153, 161-255
-        negative_set = set([128] + [153] + range(161-255))
+        negative_set = set([128] + [153] + range(161, 255))
         # -99 if the string is in the set of unused characters:
         #   0-8, 11-31, 127, 129-152, 154-160
-        unused_set = set(range(0, 9) + range(11, 32) + [127] + range(129-153) +
-                         range(154, 161))
+        unused_set = set(range(0, 9) + range(11, 32) + [127] + range(129, 153)
+                         + range(154, 161))
         if ord(c) in positive_set:
             return 1
         elif ord(c) in negative_set:
