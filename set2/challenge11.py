@@ -28,26 +28,26 @@ or CBC, tells you which one is happening.
 import random
 from challenge10 import aes_ecb_encrypt, aes_cbc_encrypt
 
+def rand_bytes(strlen):
+    """
+    Returns a string of @strlen random bytes.
+    """
+    return ''.join(map(chr,
+                       [random.randint(0, 255) for _ in range(strlen)]))
+
+def rand_bytes_range(minlen, maxlen):
+    """
+    Generates a random string of a random number of bytes from @minlen to
+    @maxlen. The distribution of possible strings is uniform.
+    """
+    return rand_bytes(random.randint(minlen, maxlen))
+
 def encryption_oracle(pt):
     """
     For the input @pt, pads it with 5-10 bytes on both sides, then encrypts it
     with either AES in ECB mode or AES in CBC mode with equal probability. The
     key and IV are randomly generated 16-byte strings.
     """
-
-    def rand_bytes(strlen):
-        """
-        Returns a string of @strlen random bytes.
-        """
-        return ''.join(map(chr,
-                           [random.randint(0, 255) for _ in range(strlen)]))
-
-    def rand_bytes_range(minlen, maxlen):
-        """
-        Generates a random string of a random number of bytes from @minlen to
-        @maxlen. The distribution of possible strings is uniform.
-        """
-        return rand_bytes(random.randint(minlen, maxlen))
 
     key = rand_bytes(16)
     iv = rand_bytes(16) # In case the mode is CBC. Generate this before
