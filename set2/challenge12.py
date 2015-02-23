@@ -91,7 +91,6 @@ class SessionOracle:
         @returns [str]: ASCII CT
         """
 
-        iv = rand_bytes(16)
         padded_pt = pt + b642hex(self.__SECRET_STRING).decode('hex')
         return aes_ecb_encrypt(self.__key, padded_pt)
 
@@ -171,7 +170,7 @@ def decrypt_session_secret():
         because the domain of Y spans the set of all possible characters.
         Return this set (filtered for valid ASCII characters).
 
-        @param padlen [int]: Length of the payload
+        @param padlen [int]: Length of the payload.
         @param blockidx [int]: The block the target byte is in.
         @param msg [str]: Current known message.
         @returns [list]: List of possible ASCII characters that the next
@@ -205,7 +204,7 @@ def decrypt_session_secret():
         blockidx = 0
         while len(msg) < msglen:
             if padlen == 0:
-                padlen = 16
+                padlen = blocksize
                 blockidx += 1
             msg += next_byte(padlen, blockidx, msg)
             padlen -= 1
