@@ -114,11 +114,21 @@ def aes_cbc_encrypt(k, pt, iv):
     @returns [str]: ASCII CT string
     """
 
+    def ecb_encrypt(k, pt):
+        """
+        Encrypts a message using AES in ECB mode (assume the input is padded to
+        the block size).
+        """
+        cipher = Cipher(algorithms.AES(k), modes.ECB(),
+                        backend=default_backend())
+        encryptor = cipher.encryptor()
+        return encryptor.update(pt) + encryptor.finalize()
+
     padded_pt = pkcs7_pad(pt, len(k))
     pt_list = [padded_pt[i:i+len(k)] for i in range(0, len(pt), len(k))]
     ct_list = [iv]
     for i in range(len(pt_list)):
-        ct_list.append(aes_ecb_encrypt(k, xorstr(ct_list[-1], pt_list[i])))
+        ct_list.append(ecb_encrypt(k, xorstr(ct_list[-1], pt_list[i])))
     return ''.join(ct_list[1:]) # Remove the IV
 
 def aes_cbc_decrypt(k, ct, iv):
@@ -132,11 +142,22 @@ def aes_cbc_decrypt(k, ct, iv):
     @returns [str]: ASCII PT string
     """
 
+    def ecb_decrypt(k, ct):
+        """
+        FROM: set1/challenge7
+        Decrypts a message encrypted using AES in ECB mode (assume the input is
+        padded to the block size).
+        """
+        cipher = Cipher(algorithms.AES(k), modes.ECB(),
+                        backend=default_backend())
+        decryptor = cipher.decryptor()
+        return decryptor.update(ct) + decryptor.finalize()
+
     padded_ct = pkcs7_pad(ct, len(k))
     ct_list = [iv]
     ct_list += [padded_ct[i:i+len(k)]
                 for i in range(0, len(padded_ct), len(k))]
-    pt_list = [xorstr(aes_ecb_decrypt(k, ct_list[i+1]), ct_list[i])
+    pt_list = [xorstr(ecb_decrypt(k, ct_list[i+1]), ct_list[i])
                for i in range(len(ct_list)-1)]
     return ''.join(pt_list)
 
