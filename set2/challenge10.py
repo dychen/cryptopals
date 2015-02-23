@@ -123,7 +123,7 @@ def aes_cbc_encrypt(k, pt, iv):
         return encryptor.update(pt) + encryptor.finalize()
 
     padded_pt = pkcs7_pad(pt, len(k))
-    pt_list = [padded_pt[i:i+len(k)] for i in range(0, len(pt), len(k))]
+    pt_list = [padded_pt[i:i+len(k)] for i in range(0, len(padded_pt), len(k))]
     ct_list = [iv]
     for i in range(len(pt_list)):
         ct_list.append(ecb_encrypt(k, xorstr(ct_list[-1], pt_list[i])))
