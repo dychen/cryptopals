@@ -25,7 +25,15 @@ PKCS#7 padding is described in RFC 5652 section 6.3, which can be found here:
 In particular:
     "For such algorithms, the input shall be padded at the trailing end with
      k-(lth mod k) octets all having value k-(lth mod k), where lth is the
-     length of the input."
+     length of the input. In other words, the input is padded at the trailing
+     end with one of the following strings:
+
+                     01 -- if lth mod k = k-1
+                  02 02 -- if lth mod k = k-2
+                      .
+                      .
+                      .
+            k k ... k k -- if lth mod k = 0"
 """
 
 def pkcs7_pad(s, length):
@@ -39,11 +47,9 @@ def pkcs7_pad(s, length):
     @returns [str]: Padded string
     """
 
-    # length - len(s) % length is the number of padded bytes required.
-    # The final % length handles the case where no padding is needed.
-    pad = (length - len(s) % length) % length
+    pad = length - len(s) % length
     return s + chr(pad) * pad
 
 if __name__=='__main__':
     padded_msg = pkcs7_pad('YELLOW SUBMARINE', 20)
-    print len(padded_msg), padded_msg
+    print len(padded_msg), padded_msg, padded_msg.encode('hex')
