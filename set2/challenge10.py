@@ -91,18 +91,16 @@ def aes_ecb_encrypt(k, pt):
 def aes_ecb_decrypt(k, ct):
     """
     FROM: set1/challenge7
-    Decrypts a message encrypted using AES in ECB mode. Pads as necessary using
-    PKCS#7.
+    Decrypts a message encrypted using AES in ECB mode.
 
     @param k [str]: key
     @param ct [str]: CT (ASCII string)
     @returns [str]: PT (ASCII string)
     """
 
-    padded_ct = pkcs7_pad(ct, len(k))
     cipher = Cipher(algorithms.AES(k), modes.ECB(), backend=default_backend())
     decryptor = cipher.decryptor()
-    return decryptor.update(padded_ct) + decryptor.finalize()
+    return decryptor.update(ct) + decryptor.finalize()
 
 def aes_cbc_encrypt(k, pt, iv):
     """
@@ -133,8 +131,7 @@ def aes_cbc_encrypt(k, pt, iv):
 
 def aes_cbc_decrypt(k, ct, iv):
     """
-    Decrypts a message encrypted using AES in CBC mode. Pads as necessary using
-    PKCS#7.
+    Decrypts a message encrypted using AES in CBC mode.
 
     @param k [str]: ASCII key
     @param ct [str]: ASCII CT string
@@ -153,10 +150,8 @@ def aes_cbc_decrypt(k, ct, iv):
         decryptor = cipher.decryptor()
         return decryptor.update(ct) + decryptor.finalize()
 
-    padded_ct = pkcs7_pad(ct, len(k))
     ct_list = [iv]
-    ct_list += [padded_ct[i:i+len(k)]
-                for i in range(0, len(padded_ct), len(k))]
+    ct_list += [ct[i:i+len(k)] for i in range(0, len(ct), len(k))]
     pt_list = [xorstr(ecb_decrypt(k, ct_list[i+1]), ct_list[i])
                for i in range(len(ct_list)-1)]
     return ''.join(pt_list)

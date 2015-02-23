@@ -60,9 +60,7 @@ class SessionOracle:
                                self.__iv)
 
     def decrypt(self, ct):
-        return aes_cbc_decrypt(self.__key,
-                               self.PREFIX + ct + self.SUFFIX,
-                               self.__iv)
+        return aes_cbc_decrypt(self.__key, ct, self.__iv)
 
     def admin_exists(self, ct):
         """
