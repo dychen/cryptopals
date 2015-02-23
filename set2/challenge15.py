@@ -32,7 +32,8 @@ def valid_pkcs7_padding(s):
     sure that the last N bytes are N
 
     @param s [str]: Input string
-    @returns [bool]: True if the string is correctly padded and False otherwise
+    @returns [bool]: True if the string is correctly padded, raises an
+                     Exception otherwise
     """
 
     last = ord(s[-1])
