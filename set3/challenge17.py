@@ -266,7 +266,7 @@ def decrypt(server, ct, iv):
                                                  chr(16 - byteidx + 1)),
                                           currchar)
                                    for currchar
-                                   in ct_blocks_mod[blockidx-1][byteidx:]])
+                                   in ct_blocks_mod[blockidx-1][byteidx:]]))
                     break
         pt_blocks = [pt_block] + pt_blocks
     return strip_padding(''.join(pt_blocks))
