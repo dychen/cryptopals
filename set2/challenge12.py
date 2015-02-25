@@ -168,13 +168,12 @@ def decrypt_session_secret():
         CT from the target payload. Since each PT uniquely maps to a CT, there
         can only be one correct Y. And there must be at least one correct Y
         because the domain of Y spans the set of all possible characters.
-        Return this set (filtered for valid ASCII characters).
+        Return Y.
 
         @param padlen [int]: Length of the payload.
         @param blockidx [int]: The block the target byte is in.
         @param msg [str]: Current known message.
-        @returns [list]: List of possible ASCII characters that the next
-                         character in the message could be.
+        @returns [str]: Next character in the message.
         """
 
         payload_prefix = 'A' * padlen
