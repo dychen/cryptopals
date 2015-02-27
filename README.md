@@ -24,7 +24,7 @@ Notes:
 19. **Break CTR with nonce reuse:**: Not sure what the author was going for here. My solution involves guessing ```E_k(keystream)``` and using that to decrypt the CTs.
 20. **Break CTR with nonce reuse v2:** Not sure what the author was going for here either. This time I just solved for the longest PT and used that to decrypt the other PT. Basically the same as 19 except a little more complicated.
 21. **Implement MT19937:** Had to read (sections of) a paper for this. If you want to understand the periodicity, equity of distribution, and parameters, you definitely need to know a bit of math. I used the seed generation function described in the appendix of the paper.
-22. Skipping
+22. **Recover MT19937 timestamp seed:** The underlying assumption here is the seed is a (relatively recent) UNIX timestamp, which significantly decreases the search space.
 23. Skipping
 24. Skipping
 25. **Break CTR Disk Encryption:**
