@@ -30,3 +30,4 @@ Notes:
 25. **Break CTR Disk Encryption:**
 26. **CTR bit-flipping:**
 27. **CBC IV=key key recovery:**
+28. **Implement SHA1:** Are we supposed to implement from scratch?
