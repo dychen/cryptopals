@@ -63,6 +63,14 @@ def rand_bytes(strlen):
     return ''.join(map(chr,
                        [random.randint(0, 255) for _ in range(strlen)]))
 
+def pkcs7_pad(s, length):
+    """
+    FROM: set2/challenge9
+    """
+
+    pad = length - len(s) % length
+    return s + chr(pad) * pad
+
 def aes_ecb_decrypt(k, ct):
     cipher = Cipher(algorithms.AES('YELLOW SUBMARINE'), modes.ECB(),
                     backend=default_backend())

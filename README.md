@@ -29,3 +29,4 @@ Notes:
 24. Skipping
 25. **Break CTR Disk Encryption:**
 26. **CTR bit-flipping:**
+27. **CBC IV=key key recovery:**
