@@ -23,6 +23,18 @@ need to be able to do is generate byte N of the keystream. Imagine if you'd
 relied on that advice to, say, encrypt a disk.
 """
 
+"""
+Relevant article: http://en.wikipedia.org/wiki/Disk_encryption_theory
+In particular:
+    "The third property is generally non-controversial. However, it indirectly
+     prohibits the use of stream ciphers, since stream ciphers require, for
+     their security, that the same initial state not be used twice (which would
+     be the case if a sector is updated with different data)"
+The third property being:
+    "[assume an adversary] can modify unused sectors on the disk and then
+     request their decryption."
+"""
+
 import binascii
 import random
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -92,24 +104,17 @@ class SessionOracle:
 
 def decrypt(oracle, ct):
     """
-    Since C_i XOR P_i = E_k(keystream), we have C_i XOR P_i = C'_i XOR P'_i.
-    Thus, for each block i, the original CT C_i, an edited PT P'_i, and the new
-    CT C'_i, the original PT P_i = C_i XOR P'_i XOR C'_i.
+    Since C XOR P = E_k(keystream), we have C XOR P = C' XOR P'. Thus, for the
+    original CT C, an edited PT P', and the new CT C', the original PT
+    P = C XOR P' XOR C'.
 
     @param oracle [SessionOracle]: Object providing the edit() function
     @param ct [str]: Input CT
     @returns [str]: Corresponding PT
     """
 
-    blocksize = 16 # Assume a blocksize of 16
-    ct_blocks = [ct[i:i+blocksize] for i in range(0, len(ct), blocksize)]
-    new_pt_block = 'A'*blocksize
-    pt_blocks = [xorstr(xorstr(ct_block, new_pt_block),
-                        oracle.edit(ct,
-                                    i*blocksize,
-                                    new_pt_block)[i*blocksize:(i+1)*blocksize])
-                 for i, ct_block in enumerate(ct_blocks)]
-    return ''.join(pt_blocks)
+    new_pt = 'A'*len(ct)
+    return xorstr(xorstr(ct, new_pt), oracle.edit(ct, 0, new_pt))
 
 if __name__=='__main__':
     with open('challenge25.txt', 'r') as f:
